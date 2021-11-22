@@ -1,0 +1,21 @@
+name: CI
+on: [pull_request, push]
+jobs:
+  cargo-deny:
+    name: Cargo Deny
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        checks:
+          - advisories
+          - bans licenses sources
+    continue-on-error: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Check ${{ matrix.checks }}
+        uses: dnaka91/action-cargo-deny@v0.1.4
+        with:
+          checks: ${{ matrix.checks }}
+          report_level: notice
+          fail_level: warning
